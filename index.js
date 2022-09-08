@@ -5,7 +5,7 @@ const dotenv = require("dotenv")
 const middleware = require('./middleware/index')
 const userRouter = require("./routes/userRoutes")
 const ideaRouter = require("./routes/ideaRoutes")
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
@@ -67,17 +67,18 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
-    done(err, user);
+    done(null, user);
   });
 });
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: 'https://localhost:3000/auth/google/authorized'
+    callbackURL: 'https://localhost:5000/auth/google/callback',
+    passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
+  function(accessToken, refreshToken, profile, done) {
+    return done(null, profile);
     User.findOrCreate({
       googleId: profile.id
     }, function(err, user) {
@@ -91,10 +92,10 @@ app.get("/", (req, res) => {
 })
 
 app.get('/auth/google', passport.authenticate('google', {
-  scope: ["profile"]
+  scope: ['profile', 'email']
 }));
 
-app.get('/auth/google/authorized',
+app.get('/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login'
   }),
@@ -177,7 +178,7 @@ app.get('/researcher', (req, res) => {
   res.sendFile(__dirname + "public/researcher.html");
 })
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
