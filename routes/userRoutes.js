@@ -1,11 +1,13 @@
-const express = require('express')
-const { registerUser, getUserProfile,updateUserProfile, deleteUser, hideIceProfile  } = require("../controllers/common/authController");
+const express = require("express");
+const {
+  registerUser,
+  authUser,
+  updateUserProfile,
+} = require("../controllers/userControllers.js");
+const { protect } = require("../middleware/authMiddleware.js");
 const router = express.Router();
 //User common Routes
-router.post("/register", registerUser)
-router.get("/basic-profile", getUserProfile)
-router.put("/basic-profile", updateUserProfile)
-router.put("/delete-user", deleteUser)
-router.get("/hideIceprofile", hideIceProfile)
+router.route("/").post(registerUser);
+router.route("/login").post(authUser);
 
 module.exports = router;
