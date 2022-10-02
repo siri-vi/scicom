@@ -35,7 +35,7 @@ app.use(passport.session());
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://localhost:27017/Users");
+  await mongoose.connect("mongodb://localhost:27017/Scicom");
 }
 
 //use this for Production
@@ -145,41 +145,41 @@ app.get("/logout", (req, res, next) => {
   });
 });
 
-app.post("/register", (req, res) => {
-  User.register(
-    {
-      username: req.body.username,
-    },
-    req.body.password,
-    (err, user) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/register");
-      } else {
-        passport.authenticate("local")(req, res, () => {
-          res.send("You're registered");
-        });
-      }
-    }
-  );
-});
+// app.post("/register", (req, res) => {
+//   User.register(
+//     {
+//       username: req.body.username,
+//     },
+//     req.body.password,
+//     (err, user) => {
+//       if (err) {
+//         console.log(err);
+//         res.redirect("/register");
+//       } else {
+//         passport.authenticate("local")(req, res, () => {
+//           res.send("You're registered");
+//         });
+//       }
+//     }
+//   );
+// });
 
-app.post("/login", (req, res) => {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password,
-  });
+// app.post("/login", (req, res) => {
+//   const user = new User({
+//     username: req.body.username,
+//     password: req.body.password,
+//   });
 
-  req.login(user, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("local")(req, res, () => {
-        res.send("You're logged in");
-      });
-    }
-  });
-});
+//   req.login(user, (err) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       passport.authenticate("local")(req, res, () => {
+//         res.send("You're logged in");
+//       });
+//     }
+//   });
+// });
 
 app.enable("trust proxy");
 app.use(cors({}));

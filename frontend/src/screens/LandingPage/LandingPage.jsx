@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function LandingPage() {
+  // useEffect(() => {
+  //   const userInfo = localStorage.getItem("userInfo");
+
+  //   if (userInfo) {
+  //     history.push("/profile");
+  //   }
+  // }, [history]);
+
   return (
     <div>
       <Link to="/profile">Profile</Link>

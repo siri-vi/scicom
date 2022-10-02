@@ -21,7 +21,7 @@ const LoginScreen = () => {
       setLoading(true);
 
       const { data } = await axios.post(
-        "/users/login",
+        "http://localhost:5000/users/login",
         {
           email,
           password,
